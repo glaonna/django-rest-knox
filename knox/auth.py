@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from rest_framework.authentication import (
-    BaseAuthentication, get_authorization_header,
+    BaseAuthentication, get_authorization_header, HTTP_HEADER_ENCODING
 )
 
 from knox.crypto import hash_token
@@ -43,6 +43,8 @@ class TokenAuthentication(BaseAuthentication):
         if request is not None:
             auth = get_authorization_header(request).split()
         elif auth_header is not None:
+            if isinstance(auth_header, str):
+                auth_header = auth_header.encode(HTTP_HEADER_ENCODING)
             auth = auth_header.split()
         else:
             cls_name = self.__class__.__name__
