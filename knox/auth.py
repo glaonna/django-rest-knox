@@ -39,8 +39,15 @@ class TokenAuthentication(BaseAuthentication):
         if self.model is None:
             raise ValueError(f"Token Authentication model is required for class '{self.__class__.__name__}'.")
 
-    def authenticate(self, request):
-        auth = get_authorization_header(request).split()
+    def authenticate(self, request=None, auth_header=None):
+        if request is not None:
+            auth = get_authorization_header(request).split()
+        elif auth_header is not None:
+            auth = auth_header.split()
+        else:
+            cls_name = self.__class__.__name__
+            raise TypeError(f"{cls_name}.authenticate() missing 1 required positional argument: 'request' or auth_header")
+
         prefix = knox_settings.AUTH_HEADER_PREFIX.encode()
 
         if not auth or auth[0].lower() != prefix.lower():
