@@ -47,8 +47,8 @@ class TokenAuthentication(BaseAuthentication):
                 auth_header = auth_header.encode(HTTP_HEADER_ENCODING)
             auth = auth_header.split()
         else:
-            cls_name = self.__class__.__name__
-            raise TypeError(f"{cls_name}.authenticate() missing 1 required positional argument: 'request' or auth_header")
+            raise TypeError(f"{self.__class__.__name__}.authenticate() missing 1 required positional argument: "
+                            f"'request' or 'auth_header'")
 
         prefix = knox_settings.AUTH_HEADER_PREFIX.encode()
 
